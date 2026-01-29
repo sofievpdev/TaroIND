@@ -334,32 +334,68 @@ The Universe awaits your questions - choose any reading and it will be used auto
 
       if (error) throw error;
 
+      // Basic metrics
       const totalUsers = users.length;
       const usedFreeTrial = users.filter(u => u.has_used_free_trial).length;
+      const notUsedFreeTrial = totalUsers - usedFreeTrial;
       const usersWithBalance = users.filter(u => u.readings_balance > 0).length;
       const totalPurchases = users.reduce((sum, u) => sum + u.total_purchases, 0);
       const totalBalance = users.reduce((sum, u) => sum + u.readings_balance, 0);
+
+      // Paying customers
+      const paidUsers = users.filter(u => u.total_purchases > 0);
+      const paidUsersCount = paidUsers.length;
+      const payingRate = totalUsers > 0 ? ((paidUsersCount / totalUsers) * 100).toFixed(1) : 0;
 
       // Conversion: how many who used free trial then purchased
       const conversions = users.filter(u => u.has_used_free_trial && u.total_purchases > 0).length;
       const conversionRate = usedFreeTrial > 0 ? ((conversions / usedFreeTrial) * 100).toFixed(1) : 0;
 
-      const statsText = `📊 BOT STATISTICS
+      // Average purchases per paying user
+      const avgPurchases = paidUsersCount > 0 ? (totalPurchases / paidUsersCount).toFixed(1) : 0;
 
-👥 Total users: ${totalUsers}
-🎁 Used free trial: ${usedFreeTrial}
-💰 Total purchases: ${totalPurchases}
-💎 Users with balance: ${usersWithBalance}
-📦 Readings in balances: ${totalBalance}
+      // Revenue calculation (approximate based on typical purchases)
+      // Package 5 = 8 stars, typical single reading ~4-6 stars
+      const estimatedRevenue = totalPurchases * 5; // rough average
 
-💵 Conversion:
-   ${conversions} out of ${usedFreeTrial} purchased after free trial (${conversionRate}%)
+      // User segments
+      const freeTrialOnly = users.filter(u => u.has_used_free_trial && u.total_purchases === 0).length;
+      const paidNeverTrial = users.filter(u => !u.has_used_free_trial && u.total_purchases > 0).length;
+      const noEngagement = users.filter(u => !u.has_used_free_trial && u.total_purchases === 0).length;
 
-📈 Recent registrations:`;
+      const statsText = `📊 BOT STATISTICS (English)
+
+👥 USER BASE:
+   Total users: ${totalUsers}
+   💰 Paying customers: ${paidUsersCount} (${payingRate}%)
+   🎁 Used free trial: ${usedFreeTrial}
+   👻 Never engaged: ${noEngagement}
+
+💵 REVENUE & PURCHASES:
+   Total purchases: ${totalPurchases}
+   Estimated revenue: ~${estimatedRevenue} ⭐
+   Avg purchases/user: ${avgPurchases}
+
+🎯 CONVERSION FUNNEL:
+   Free trial users: ${usedFreeTrial}
+   → Converted to paid: ${conversions} (${conversionRate}%)
+   → Stayed free: ${freeTrialOnly}
+
+   Paid without trial: ${paidNeverTrial}
+
+💎 ACTIVE BALANCES:
+   Users with balance: ${usersWithBalance}
+   Total readings in balances: ${totalBalance}
+
+📊 USER SEGMENTS:
+   🟢 Converted: ${conversions} (used trial + bought)
+   🟡 Trial only: ${freeTrialOnly} (potential customers)
+   🟠 Paid direct: ${paidNeverTrial} (skipped trial)
+   🔴 Not engaged: ${noEngagement} (started but bounced)`;
 
       await ctx.reply(statsText);
 
-      // Last 10 users
+      // Last 10 users with more details
       const recent = users
         .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
         .slice(0, 10);
@@ -367,17 +403,39 @@ The Universe awaits your questions - choose any reading and it will be used auto
       let recentText = '📋 Last 10 users:\n\n';
       recent.forEach((u, i) => {
         const date = new Date(u.created_at).toLocaleDateString('en-US', {
+          month: 'short',
           day: '2-digit',
-          month: '2-digit',
           hour: '2-digit',
           minute: '2-digit'
         });
-        recentText += `${i + 1}. User ${u.user_id}\n`;
+
+        let status = '🔴'; // not engaged
+        if (u.total_purchases > 0) status = '🟢'; // paying
+        else if (u.has_used_free_trial) status = '🟡'; // trial only
+
+        recentText += `${status} ${i + 1}. User ${u.user_id}\n`;
         recentText += `   📅 ${date}\n`;
-        recentText += `   💎 Balance: ${u.readings_balance}, Purchases: ${u.total_purchases}\n\n`;
+        recentText += `   💎 Balance: ${u.readings_balance} | Purchases: ${u.total_purchases}\n`;
+        recentText += `   🎁 Trial: ${u.has_used_free_trial ? 'Yes' : 'No'}\n\n`;
       });
 
       await ctx.reply(recentText);
+
+      // Top spenders
+      const topSpenders = users
+        .filter(u => u.total_purchases > 0)
+        .sort((a, b) => b.total_purchases - a.total_purchases)
+        .slice(0, 5);
+
+      if (topSpenders.length > 0) {
+        let topText = '🏆 Top 5 Customers:\n\n';
+        topSpenders.forEach((u, i) => {
+          topText += `${i + 1}. User ${u.user_id}\n`;
+          topText += `   💰 ${u.total_purchases} purchases\n`;
+          topText += `   💎 Balance: ${u.readings_balance}\n\n`;
+        });
+        await ctx.reply(topText);
+      }
 
     } catch (error) {
       console.error('Stats error:', error);
