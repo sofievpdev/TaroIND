@@ -19,7 +19,7 @@ class TarotService {
 
   // Форматирование карты для отображения
   formatCard(card, position) {
-    return `🃏 ${position}: ${card.name}\n📖 ${card.keywords}`;
+    return `🃏 ${position}: ${card.nameEn}\n📖 ${card.keywordsEn}`;
   }
 
   // Форматирование всего расклада
