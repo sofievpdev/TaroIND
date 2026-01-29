@@ -495,7 +495,8 @@ Many say: "The reading hit exactly right. Like someone saw into my soul."
 
 ━━━━━━━━━━━━━━━
 🎁 BEST VALUE - Sacred Bundle (${spreadTypes.package5.price} ⭐)
-Save 22⭐! Get 5 readings for any questions`,
+Save 22⭐! Get 5 readings
+Use for ANY spreads above - love, destiny, or anything!`,
           Markup.inlineKeyboard([
             [Markup.button.callback(`🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)`, 'spread_one_card')],
             [Markup.button.callback(`🔮 Destiny Path (${spreadTypes.threeCards.price} ⭐)`, 'spread_three_cards')],
