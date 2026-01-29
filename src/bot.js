@@ -479,28 +479,30 @@ The Universe awaits your questions - choose any reading and it will be used auto
       // If this was a free trial reading - show special offer (WOW moment!)
       if (session.isFreeTrialReading) {
         await ctx.reply(
-          `🌟 The Universe has spoken through the cards! 🌟
+          `💫 Feel it? The cards revealed what you already knew deep inside...
 
-Did the reading resonate with your soul? The cosmic energies rarely lie...
+Many say: "The reading hit exactly right. Like someone saw into my soul."
 
-💫 I sense you seek deeper answers. The cards have much more to reveal about your destiny:
+🌟 This is just the beginning. You have other questions? Now is the most powerful moment to continue. The energy of the cards is still open to you.
 
-💖 Love & Relationships - Will they be yours?
-💞 Soul Compatibility - Are you meant to unite?
-🔮 Past, Present, Future - Your complete timeline
-✨ Celtic Cross - Unlock ALL secrets of your life
+✨ Choose your next divine message:
 
-🎁 SPECIAL BLESSING for believers like you:
-Sacred Bundle - Best value for your spiritual journey!
+🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐) - Quick cosmic answer
+🔮 Destiny Path (${spreadTypes.threeCards.price} ⭐) - Past, present, future revealed
+💖 Heart's Truth (${spreadTypes.loveReading.price} ⭐) - Will they be yours?
+💞 Soul Match (${spreadTypes.compatibilityReading.price} ⭐) - Are you destined together?
+✨ Complete Destiny (${spreadTypes.celticCross.price} ⭐) - Unlock ALL life secrets
 
-Ready to discover your complete destiny?`,
+━━━━━━━━━━━━━━━
+🎁 BEST VALUE - Sacred Bundle (${spreadTypes.package5.price} ⭐)
+Save 22⭐! Get 5 readings for any questions`,
           Markup.inlineKeyboard([
-            [Markup.button.callback(`🎁 Sacred Bundle - Save 22⭐ (${spreadTypes.package5.price} ⭐)`, 'spread_package_5')],
-            [Markup.button.callback(`✨ Complete Destiny (${spreadTypes.celticCross.price} ⭐)`, 'spread_celtic_cross')],
+            [Markup.button.callback(`🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)`, 'spread_one_card')],
+            [Markup.button.callback(`🔮 Destiny Path (${spreadTypes.threeCards.price} ⭐)`, 'spread_three_cards')],
             [Markup.button.callback(`💖 Heart's Truth (${spreadTypes.loveReading.price} ⭐)`, 'spread_love_reading')],
             [Markup.button.callback(`💞 Soul Match (${spreadTypes.compatibilityReading.price} ⭐)`, 'spread_compatibility_reading')],
-            [Markup.button.callback(`🔮 Destiny Path (${spreadTypes.threeCards.price} ⭐)`, 'spread_three_cards')],
-            [Markup.button.callback(`🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)`, 'spread_one_card')]
+            [Markup.button.callback(`✨ Complete Destiny (${spreadTypes.celticCross.price} ⭐)`, 'spread_celtic_cross')],
+            [Markup.button.callback(`🎁 Sacred Bundle - Save 22⭐ (${spreadTypes.package5.price} ⭐)`, 'spread_package_5')]
           ])
         );
       } else {
