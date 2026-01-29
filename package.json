@@ -1,0 +1,27 @@
+{
+  "name": "tarot-telegram-bot-en",
+  "version": "1.0.0",
+  "description": "English Telegram bot for Tarot readings with ChatGPT and Telegram Stars payments",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "tarot",
+    "openai",
+    "chatgpt",
+    "telegram-stars"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.93.2",
+    "dotenv": "^17.2.3",
+    "openai": "^6.16.0",
+    "telegraf": "^4.16.3"
+  }
+}
