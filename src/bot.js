@@ -239,6 +239,7 @@ Choose your path to enlightenment...`;
         spreadId: spread.id,
         userId: ctx.from.id
       }),
+      provider_token: '', // Empty for Telegram Stars
       currency: 'XTR', // Telegram Stars
       prices: [{ label: spread.name, amount: spread.price }]
     };
