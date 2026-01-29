@@ -103,27 +103,29 @@ The cosmic forces await your question...`;
 
 The Universe continues to speak through the ancient cards. I sense you seek deeper truths...${balanceText}
 
-✨ Divine readings available:
+✨ Choose your divine reading:
+
+━━━━━━━━━━━━━━━
+🎁 BLESSED OFFER 🎁
+Sacred Bundle (${spreadTypes.package5.price} ⭐) - Save 22⭐!
+5 readings for any questions
+
+━━━━━━━━━━━━━━━
 
 🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)
 Instant answer from cosmic forces
 
 🔮 Destiny Path (${spreadTypes.threeCards.price} ⭐)
-Your journey: past karma → present → future
+Past karma → Present → Future
 
 💖 Heart's Truth (${spreadTypes.loveReading.price} ⭐)
-Will they be yours? Love destiny revealed
+Will they be yours?
 
 💞 Soul Match (${spreadTypes.compatibilityReading.price} ⭐)
 Are you meant to be together?
 
 ✨ Complete Destiny (${spreadTypes.celticCross.price} ⭐)
-Unlock ALL secrets of your situation
-
-━━━━━━━━━━━━━━━
-🎁 BLESSED OFFER 🎁
-Sacred Bundle - 5 Messages (${spreadTypes.package5.price} ⭐)
-Save 22⭐! The Universe rewards believers
+Unlock ALL secrets of your life
 
 Choose your path to enlightenment...`;
 

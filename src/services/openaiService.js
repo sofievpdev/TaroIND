@@ -10,10 +10,10 @@ class OpenAIService {
   // Create mystical prompt for Tarot reading
   createTarotPrompt(spreadType, cards, userQuestion) {
     const cardDescriptions = cards.map((card, index) => {
-      return `Position ${index + 1} (${spreadType.positions[index]}): ${card.name} (${card.nameEn})
-Keywords: ${card.keywords}
-Upright meaning: ${card.upright}
-Reversed meaning: ${card.reversed}`;
+      return `Position ${index + 1} (${spreadType.positions[index]}): ${card.nameEn}
+Keywords: ${card.keywordsEn}
+Upright meaning: ${card.uprightEn}
+Reversed meaning: ${card.reversedEn}`;
     }).join('\n\n');
 
     const prompt = `You are a wise spiritual guide with deep knowledge of Tarot. The Universe speaks through signs and cards. Your task is to give a profound, insightful interpretation that SPECIFICALLY answers the client's question.
