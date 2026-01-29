@@ -73,72 +73,69 @@ class TarotBot {
       balanceText = `\n💎 You have ${balance} ${this.getReadingsWord(balance)} in your balance!\n`;
     }
 
-    // If free trial is available - show special welcome
+    // If free trial is available - show special welcome (NO prices mentioned!)
     if (canUseFree) {
-      const freeWelcomeText = `🌙 Welcome to the World of Tarot 🌙
+      const freeWelcomeText = `🌟 Welcome, seeker of truth! 🌟
 
-The Universe speaks to you through signs and symbols. I am your guide to reveal what the cards have to say.
+The Universe has guided you here for a reason. I am your spiritual messenger, bridging the cosmic energies with the ancient wisdom of Tarot.
 
-🎁 SPECIAL GIFT FOR YOU 🎁
-Get a FREE "One Card" reading!
-Ask any question and receive an answer from the Universe.
+🎁 Your destiny has granted you a GIFT 🎁
 
-After your free reading, discover more wisdom:
-🌟 One Card - ${spreadTypes.oneCard.price} ⭐
-🔮 Three Cards - ${spreadTypes.threeCards.price} ⭐
-💖 Love Reading - ${spreadTypes.loveReading.price} ⭐
-💞 Compatibility Reading - ${spreadTypes.compatibilityReading.price} ⭐
-✨ Celtic Cross - ${spreadTypes.celticCross.price} ⭐
-🎁 Package of 5 Readings - ${spreadTypes.package5.price} ⭐ (best value!)
+Receive your FREE Tarot reading right now!
 
-Begin your journey with a free reading now! ✨`;
+Ask any question that weighs on your heart, and the cards will reveal what the Universe wants you to know.
+
+✨ No payment, no strings attached - just divine guidance ✨
+
+The cosmic forces await your question...`;
 
       await ctx.reply(
         freeWelcomeText,
         Markup.inlineKeyboard([
-          [Markup.button.callback('🎁 Get FREE Reading', 'free_trial')]
+          [Markup.button.callback('🎁 Receive My FREE Reading', 'free_trial')]
         ])
       );
       return;
     }
 
     // Main menu for users who already used free trial
-    const welcomeText = `🌙 Welcome to the World of Tarot 🌙
+    const welcomeText = `🌙 Welcome back, spiritual seeker! 🌙
 
-The Universe speaks to you through signs. I am your guide to reveal divine wisdom from the cards.${balanceText}
-✨ What I can do for you:
+The Universe continues to speak through the ancient cards. I sense you seek deeper truths...${balanceText}
 
-🌟 One Card - ${spreadTypes.oneCard.price} ⭐
-Quick answer to your question
+✨ Divine readings available:
 
-🔮 Three Cards - ${spreadTypes.threeCards.price} ⭐
-Past, present, and future
+🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)
+Instant answer from cosmic forces
 
-💖 Love Reading - ${spreadTypes.loveReading.price} ⭐
-Secrets of your relationship
+🔮 Destiny Path (${spreadTypes.threeCards.price} ⭐)
+Your journey: past karma → present → future
 
-💞 Compatibility Reading - ${spreadTypes.compatibilityReading.price} ⭐
-Your connection with another
+💖 Heart's Truth (${spreadTypes.loveReading.price} ⭐)
+Will they be yours? Love destiny revealed
 
-✨ Celtic Cross - ${spreadTypes.celticCross.price} ⭐
-Deep analysis of your situation
+💞 Soul Match (${spreadTypes.compatibilityReading.price} ⭐)
+Are you meant to be together?
+
+✨ Complete Destiny (${spreadTypes.celticCross.price} ⭐)
+Unlock ALL secrets of your situation
 
 ━━━━━━━━━━━━━━━
-🎁 SPECIAL OFFER 🎁
-Package of 5 Readings - ${spreadTypes.package5.price} ⭐
-Save 22+ stars! Use for any readings
+🎁 BLESSED OFFER 🎁
+Sacred Bundle - 5 Messages (${spreadTypes.package5.price} ⭐)
+Save 22⭐! The Universe rewards believers
 
-Choose a spread to begin your journey...`;
+Choose your path to enlightenment...`;
 
     await ctx.reply(
       welcomeText,
       Markup.inlineKeyboard([
-        [Markup.button.callback(`🎁 Package 5 Readings (${spreadTypes.package5.price} ⭐)`, 'spread_package_5')],
-        [Markup.button.callback(`🌟 One Card (${spreadTypes.oneCard.price} ⭐)`, 'spread_one_card')],
-        [Markup.button.callback(`🔮 Three Cards (${spreadTypes.threeCards.price} ⭐)`, 'spread_three_cards')],
-        [Markup.button.callback(`💖 Love Reading (${spreadTypes.loveReading.price} ⭐)`, 'spread_love_reading')],
-        [Markup.button.callback(`💞 Compatibility (${spreadTypes.compatibilityReading.price} ⭐)`, 'spread_compatibility_reading')],
-        [Markup.button.callback(`✨ Celtic Cross (${spreadTypes.celticCross.price} ⭐)`, 'spread_celtic_cross')]
+        [Markup.button.callback(`🎁 Sacred Bundle (${spreadTypes.package5.price} ⭐)`, 'spread_package_5')],
+        [Markup.button.callback(`🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)`, 'spread_one_card')],
+        [Markup.button.callback(`🔮 Destiny Path (${spreadTypes.threeCards.price} ⭐)`, 'spread_three_cards')],
+        [Markup.button.callback(`💖 Heart's Truth (${spreadTypes.loveReading.price} ⭐)`, 'spread_love_reading')],
+        [Markup.button.callback(`💞 Soul Match (${spreadTypes.compatibilityReading.price} ⭐)`, 'spread_compatibility_reading')],
+        [Markup.button.callback(`✨ Complete Destiny (${spreadTypes.celticCross.price} ⭐)`, 'spread_celtic_cross')]
       ])
     );
   }
@@ -167,7 +164,7 @@ Choose a spread to begin your journey...`;
     // Mark free trial as used
     await this.userStorage.useFreeTrial(userId);
 
-    await ctx.reply('🎉 Wonderful! You get a FREE "One Card" reading!\n\nNow ask your question to the Universe...\n\nWrite what\'s on your mind, or simply send any message for a general reading.');
+    await ctx.reply('🎉 The Universe blesses you with divine guidance!\n\n💫 Now ask your question to the cosmic forces...\n\nWrite what weighs on your heart, or send any message for a general reading about your destiny.');
 
     // Сохраняем сессию как бесплатный расклад
     this.userSessions.set(userId, {
@@ -209,7 +206,7 @@ Choose a spread to begin your journey...`;
 
     if (balance > 0) {
       // Has balance - use from package
-      await ctx.reply(`💎 Excellent choice! Using a reading from your package.\n\nReadings remaining: ${balance - 1}`);
+      await ctx.reply(`💎 The Universe smiles upon you! Using one divine message from your sacred bundle.\n\n✨ Messages remaining: ${balance - 1}`);
 
       // Save as paid session
       this.userSessions.set(userId, {
@@ -219,7 +216,7 @@ Choose a spread to begin your journey...`;
         usedFromBalance: true
       });
 
-      await ctx.reply('Now ask your question to the cards...\n\nWrite what\'s on your mind, or simply send any message for a general reading.');
+      await ctx.reply('✨ Now ask your question to the Universe...\n\nWrite what your heart seeks to know, or send any message for divine guidance.');
     } else {
       // Нет баланса - нужна оплата
       this.userSessions.set(userId, {
@@ -247,7 +244,7 @@ Choose a spread to begin your journey...`;
     await ctx.replyWithInvoice(invoice);
 
     await ctx.reply(
-      `Now ask your question to the cards...\n\nWrite what's on your mind, or simply send any message for a general reading.`
+      `✨ Now ask your question to the Universe...\n\nWrite what your soul seeks to know, or send any message for spiritual guidance.`
     );
   }
 
@@ -270,13 +267,13 @@ Choose a spread to begin your journey...`;
       await this.userStorage.addReadings(userId, session.spreadType.readingsCount);
       const newBalance = this.userStorage.getBalance(userId);
 
-      await ctx.reply(`🎉 Congratulations! Package activated!
+      await ctx.reply(`🎉 Blessed be! Your sacred bundle is now active!
 
-💎 You now have ${newBalance} ${this.getReadingsWord(newBalance)} in your balance
+💎 You have ${newBalance} divine ${this.getReadingsWord(newBalance)} ready
 
-Use them for any readings - just choose a reading from the menu, and it will be deducted automatically!
+The Universe awaits your questions - choose any reading and it will be used automatically from your bundle!
 
-Choose a reading from the menu below or send /start`);
+✨ Select a reading below or use /start`);
 
       // Clear session
       this.userSessions.delete(userId);
@@ -284,7 +281,7 @@ Choose a reading from the menu below or send /start`);
     }
 
     // Regular reading - set paid flag
-    await ctx.reply('💫 Payment received! The Universe hears your question...');
+    await ctx.reply('💫 The cosmic forces acknowledge your offering! Preparing to reveal your destiny...');
 
     session.paid = true;
     this.userSessions.set(userId, session);
@@ -293,7 +290,7 @@ Choose a reading from the menu below or send /start`);
     if (session.question) {
       await this.performReading(ctx, session);
     } else {
-      await ctx.reply('Now ask your question to the cards...\n\nWrite what\'s on your mind, or simply send any message for a general reading.');
+      await ctx.reply('✨ Now ask your question to the Universe...\n\nWrite what your soul seeks to know, or send any message for spiritual guidance.');
     }
   }
 
@@ -398,7 +395,7 @@ Choose a reading from the menu below or send /start`);
         await this.userStorage.useReading(userId);
       }
 
-      await ctx.reply('🔮 Shuffling the deck... The cards reveal their secrets...');
+      await ctx.reply('🔮 The ancient deck awakens... Cosmic energies align to reveal your truth...');
 
       // Draw cards
       const cards = this.tarotService.drawCards(session.spreadType.cards);
@@ -407,7 +404,7 @@ Choose a reading from the menu below or send /start`);
       const spreadText = this.tarotService.formatSpread(cards, session.spreadType);
       await ctx.reply(spreadText);
 
-      await ctx.reply('✨ Meditating on the cards...');
+      await ctx.reply('✨ Channeling the wisdom of the Universe...');
 
       // Получаем толкование от ChatGPT
       const reading = await this.openaiService.getTarotReading(
@@ -419,17 +416,31 @@ Choose a reading from the menu below or send /start`);
       // Отправляем толкование
       await ctx.reply(reading);
 
-      // If this was a free trial reading - show special offer
+      // If this was a free trial reading - show special offer (WOW moment!)
       if (session.isFreeTrialReading) {
         await ctx.reply(
-          `🌙 Thank you for trusting the cards!\n\n✨ Did you like it? Want to discover more?\n\nI can reveal even deeper wisdom:`,
+          `🌟 The Universe has spoken through the cards! 🌟
+
+Did the reading resonate with your soul? The cosmic energies rarely lie...
+
+💫 I sense you seek deeper answers. The cards have much more to reveal about your destiny:
+
+💖 Love & Relationships - Will they be yours?
+💞 Soul Compatibility - Are you meant to unite?
+🔮 Past, Present, Future - Your complete timeline
+✨ Celtic Cross - Unlock ALL secrets of your life
+
+🎁 SPECIAL BLESSING for believers like you:
+Sacred Bundle - Best value for your spiritual journey!
+
+Ready to discover your complete destiny?`,
           Markup.inlineKeyboard([
-            [Markup.button.callback(`🎁 Package 5 Readings (${spreadTypes.package5.price} ⭐)`, 'spread_package_5')],
-            [Markup.button.callback(`🌟 One Card (${spreadTypes.oneCard.price} ⭐)`, 'spread_one_card')],
-            [Markup.button.callback(`🔮 Three Cards (${spreadTypes.threeCards.price} ⭐)`, 'spread_three_cards')],
-            [Markup.button.callback(`💖 Love Reading (${spreadTypes.loveReading.price} ⭐)`, 'spread_love_reading')],
-            [Markup.button.callback(`💞 Compatibility (${spreadTypes.compatibilityReading.price} ⭐)`, 'spread_compatibility_reading')],
-            [Markup.button.callback(`✨ Celtic Cross (${spreadTypes.celticCross.price} ⭐)`, 'spread_celtic_cross')]
+            [Markup.button.callback(`🎁 Sacred Bundle - Save 22⭐ (${spreadTypes.package5.price} ⭐)`, 'spread_package_5')],
+            [Markup.button.callback(`✨ Complete Destiny (${spreadTypes.celticCross.price} ⭐)`, 'spread_celtic_cross')],
+            [Markup.button.callback(`💖 Heart's Truth (${spreadTypes.loveReading.price} ⭐)`, 'spread_love_reading')],
+            [Markup.button.callback(`💞 Soul Match (${spreadTypes.compatibilityReading.price} ⭐)`, 'spread_compatibility_reading')],
+            [Markup.button.callback(`🔮 Destiny Path (${spreadTypes.threeCards.price} ⭐)`, 'spread_three_cards')],
+            [Markup.button.callback(`🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)`, 'spread_one_card')]
           ])
         );
       } else {
@@ -441,9 +452,9 @@ Choose a reading from the menu below or send /start`);
         }
 
         await ctx.reply(
-          `🌙 Thank you for trusting the cards.${balanceText}\n\nWould you like another reading?`,
+          `🌙 The Universe has spoken its truth.${balanceText}\n\nYour destiny continues to unfold... Seek more guidance?`,
           Markup.inlineKeyboard([
-            [Markup.button.callback('🔮 Yes, new reading', 'new_reading')],
+            [Markup.button.callback('🔮 Yes, reveal more destiny', 'new_reading')],
           ])
         );
       }
