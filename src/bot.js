@@ -66,12 +66,19 @@ class TarotBot {
   // Приветствие и главное меню
   async handleStart(ctx) {
     const userId = ctx.from.id;
-    const balance = this.userStorage.getBalance(userId);
-    const canUseFree = this.userStorage.canUseFreeTrial(userId);
+    const balance = await this.userStorage.getBalance(userId);
+    const canUseFree = await this.userStorage.canUseFreeTrial(userId);
+    const freeQuickDecisions = await this.userStorage.getRemainingFreeQuickDecisions(userId);
 
     let balanceText = '';
     if (balance > 0) {
       balanceText = `\n💎 You have ${balance} ${this.getReadingsWord(balance)} in your balance!\n`;
+    }
+
+    // Add info about free quick decisions
+    let quickDecisionText = '';
+    if (freeQuickDecisions > 0) {
+      quickDecisionText = `🎁 You have ${freeQuickDecisions} free "Quick Decisions"!\n`;
     }
 
     // If free trial is available - show special welcome (NO prices mentioned!)
@@ -103,7 +110,7 @@ The cosmic forces await your question...`;
     const welcomeText = `🌙 Welcome back, spiritual seeker! 🌙
 
 The Universe continues to speak through the ancient cards. I sense you seek deeper truths...${balanceText}
-
+${quickDecisionText}
 ✨ Choose your divine reading:
 
 ━━━━━━━━━━━━━━━
@@ -113,7 +120,7 @@ Sacred Bundle (${spreadTypes.package5.price} ⭐) - Save 22⭐!
 
 ━━━━━━━━━━━━━━━
 
-⚖️ Quick Decision (${spreadTypes.quickDecision.price} ⭐)
+⚖️ Quick Decision ${freeQuickDecisions > 0 ? '(FREE - ' + freeQuickDecisions + ' times!)' : '(' + spreadTypes.quickDecision.price + ' ⭐)'}
 Yes or No? Clear answer for your choice
 
 🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)
@@ -137,7 +144,7 @@ Choose your path to enlightenment...`;
       welcomeText,
       Markup.inlineKeyboard([
         [Markup.button.callback(`🎁 Sacred Bundle (${spreadTypes.package5.price} ⭐)`, 'spread_package_5')],
-        [Markup.button.callback(`⚖️ Quick Decision (${spreadTypes.quickDecision.price} ⭐)`, 'spread_quick_decision')],
+        [Markup.button.callback(freeQuickDecisions > 0 ? `⚖️ Quick Decision (FREE - ${freeQuickDecisions}!)` : `⚖️ Quick Decision (${spreadTypes.quickDecision.price} ⭐)`, 'spread_quick_decision')],
         [Markup.button.callback(`🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)`, 'spread_one_card')],
         [Markup.button.callback(`🔮 Destiny Path (${spreadTypes.threeCards.price} ⭐)`, 'spread_three_cards')],
         [Markup.button.callback(`💖 Heart's Truth (${spreadTypes.loveReading.price} ⭐)`, 'spread_love_reading')],
@@ -199,6 +206,33 @@ Choose your path to enlightenment...`;
 
     const userId = ctx.from.id;
 
+    // Check for free Quick Decisions
+    if (spread.id === 'quick_decision') {
+      const canUseFree = await this.userStorage.canUseFreeQuickDecision(userId);
+      const remaining = await this.userStorage.getRemainingFreeQuickDecisions(userId);
+
+      if (canUseFree) {
+        // Use free quick decision
+        await this.userStorage.useFreeQuickDecision(userId);
+        const newRemaining = remaining - 1;
+
+        await ctx.reply(`🎁 Excellent! Using a free "Quick Decision"!\n\n✨ You have ${newRemaining} free ${newRemaining === 1 ? 'attempt' : 'attempts'} remaining`);
+
+        // Save session as paid
+        this.userSessions.set(userId, {
+          spreadType: spread,
+          timestamp: Date.now(),
+          paid: true,
+          usedFreeQuickDecision: true
+        });
+
+        await ctx.reply('⚖️ Ask your YES or NO question...\n\nFor example: "Should I change my job?" or "Will this project succeed?"');
+        return;
+      } else {
+        await ctx.reply(`⚖️ Quick Decision\n\nYou've used all 5 free attempts. Current price: ${spread.price} ⭐`);
+      }
+    }
+
     // If it's a package - send invoice
     if (spread.isPackage) {
       this.userSessions.set(userId, {
@@ -209,7 +243,7 @@ Choose your path to enlightenment...`;
     }
 
     // For regular reading - check balance
-    const balance = this.userStorage.getBalance(userId);
+    const balance = await this.userStorage.getBalance(userId);
 
     if (balance > 0) {
       // Has balance - use from package

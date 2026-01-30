@@ -53,6 +53,7 @@ class SupabaseStorage {
           readingsBalance: 0,
           totalPurchases: 0,
           hasUsedFreeTrial: false,
+          quickDecisionsUsed: 0,
           createdAt: Date.now(),
           lastActivity: Date.now()
         });
@@ -77,6 +78,7 @@ class SupabaseStorage {
           readings_balance: 0,
           total_purchases: 0,
           has_used_free_trial: false,
+          quick_decisions_used: 0,
           created_at: new Date().toISOString(),
           last_activity: new Date().toISOString()
         };
@@ -126,6 +128,7 @@ class SupabaseStorage {
       readingsBalance: data.readings_balance,
       totalPurchases: data.total_purchases,
       hasUsedFreeTrial: data.has_used_free_trial,
+      quickDecisionsUsed: data.quick_decisions_used || 0,
       createdAt: new Date(data.created_at).getTime(),
       lastActivity: new Date(data.last_activity).getTime()
     };
@@ -216,6 +219,38 @@ class SupabaseStorage {
       totalPurchases: user.totalPurchases,
       memberSince: new Date(user.createdAt).toLocaleDateString('ru-RU')
     };
+  }
+
+  // Check if free quick decisions are available
+  async canUseFreeQuickDecision(userId) {
+    const user = await this.getUser(userId);
+    return user.quickDecisionsUsed < 5;
+  }
+
+  // Get remaining free quick decisions
+  async getRemainingFreeQuickDecisions(userId) {
+    const user = await this.getUser(userId);
+    return Math.max(0, 5 - user.quickDecisionsUsed);
+  }
+
+  // Use free quick decision
+  async useFreeQuickDecision(userId) {
+    if (!this.supabase) {
+      const user = this.users.get(userId);
+      user.quickDecisionsUsed += 1;
+      return true;
+    }
+
+    const user = await this.getUser(userId);
+    const newCount = user.quickDecisionsUsed + 1;
+
+    const { error } = await this.supabase
+      .from('users')
+      .update({ quick_decisions_used: newCount })
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return true;
   }
 }
 

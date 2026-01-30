@@ -21,9 +21,11 @@ const spreadTypes = {
   quickDecision: {
     id: 'quick_decision',
     name: '⚖️ Quick Decision',
-    description: 'Yes or No? One card reveals a clear answer before you make your choice.',
+    description: 'Yes or No? One card reveals a clear answer before you make your choice. 🎁 First 5 times FREE!',
     cards: 1,
     price: 1, // Stars
+    isFreeFirstTimes: true,
+    freeLimit: 5,
     positions: ['Answer: Yes or No']
   },
   threeCards: {
