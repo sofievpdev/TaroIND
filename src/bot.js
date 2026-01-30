@@ -3,6 +3,7 @@ const OpenAIService = require('./services/openaiService');
 const TarotService = require('./services/tarotService');
 const SupabaseStorage = require('./services/supabaseStorage');
 const { spreadTypes } = require('./data/spreadConfig');
+const { getCardImageUrlAlt } = require('./utils/cardImages');
 
 class TarotBot {
   constructor(botToken, openaiApiKey) {
@@ -461,9 +462,24 @@ The Universe awaits your questions - choose any reading and it will be used auto
       // Draw cards
       const cards = this.tarotService.drawCards(session.spreadType.cards);
 
-      // Show drawn cards
-      const spreadText = this.tarotService.formatSpread(cards, session.spreadType);
-      await ctx.reply(spreadText);
+      // Show drawn cards with images
+      await ctx.reply(`✨ ${session.spreadType.name} ✨\n\nYour cards are revealing themselves...`);
+
+      // Send image of each card
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const position = session.spreadType.positions[i];
+        const imageUrl = getCardImageUrlAlt(card);
+
+        try {
+          await ctx.replyWithPhoto(imageUrl, {
+            caption: `🃏 ${position}: ${card.nameEn}\n📖 ${card.keywordsEn}`
+          });
+        } catch (error) {
+          // If image failed to load, send as text
+          await ctx.reply(`🃏 ${position}: ${card.nameEn}\n📖 ${card.keywordsEn}`);
+        }
+      }
 
       await ctx.reply('✨ Channeling the wisdom of the Universe...');
 
