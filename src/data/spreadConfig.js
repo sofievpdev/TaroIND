@@ -18,6 +18,14 @@ const spreadTypes = {
     price: 2, // Stars
     positions: ['Divine Answer']
   },
+  quickDecision: {
+    id: 'quick_decision',
+    name: '⚖️ Quick Decision',
+    description: 'Yes or No? One card reveals a clear answer before you make your choice.',
+    cards: 1,
+    price: 1, // Stars
+    positions: ['Answer: Yes or No']
+  },
   threeCards: {
     id: 'three_cards',
     name: '🔮 Three Cards - Destiny Path',

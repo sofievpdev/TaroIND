@@ -16,7 +16,10 @@ Upright meaning: ${card.uprightEn}
 Reversed meaning: ${card.reversedEn}`;
     }).join('\n\n');
 
-    const prompt = `You are a wise spiritual guide with deep knowledge of Tarot. The Universe speaks through signs and cards. Your task is to give a profound, insightful interpretation that SPECIFICALLY answers the client's question.
+    // Special logic for quick decision spread
+    const isQuickDecision = spreadType.id === 'quick_decision';
+
+    const prompt = `You are a wise spiritual guide with deep knowledge of Tarot. The Universe speaks through signs and cards. Your task is to give a ${isQuickDecision ? 'CLEAR YES or NO answer' : 'profound, insightful interpretation'} that SPECIFICALLY answers the client's question.
 
 Reading type: ${spreadType.name}
 Description: ${spreadType.description}
@@ -28,6 +31,24 @@ ${cardDescriptions}
 
 IMPORTANT: The client's question is paramount. The entire reading must answer it directly. If they ask "will I travel to Dubai" - give a concrete answer based on the cards!
 
+${isQuickDecision ? `
+🎯 "QUICK DECISION" SPREAD - SPECIAL FORMAT! 🎯
+
+This is a YES/NO spread. Your answer must be BRIEF and CLEAR!
+
+Response structure (maximum 300 words):
+
+1. ⚖️ THE ANSWER ⚖️
+START IMMEDIATELY WITH THE ANSWER: "YES ✓" or "NO ✗" or "LIKELY YES ✓" or "LIKELY NO ✗"
+
+2. 🔮 THE CARD SPEAKS 🔮
+Briefly (2-3 sentences) explain what the card shows and why it leads to this answer.
+
+3. 💫 GUIDANCE 💫
+One or two sentences - what to do with this knowledge.
+
+IMPORTANT: Be BRIEF! No more than 300 words. Give YES or NO answer immediately.
+` : `
 Create a detailed interpretation with this structure:
 
 1. ✨ SPIRITUAL OPENING ✨
@@ -45,6 +66,7 @@ THIS IS MOST IMPORTANT! Give a CLEAR and SPECIFIC answer to the client's questio
 
 4. 💫 DIVINE GUIDANCE 💫
 What should the client do, how to use this wisdom. Specific actions.
+`}
 
 Style:
 - Warm spiritual tone, BUT with concrete answers
@@ -63,13 +85,16 @@ CRITICALLY IMPORTANT: Your answer must give the client a clear understanding of 
   async getTarotReading(spreadType, cards, userQuestion) {
     try {
       const prompt = this.createTarotPrompt(spreadType, cards, userQuestion);
+      const isQuickDecision = spreadType.id === 'quick_decision';
 
       const completion = await this.client.chat.completions.create({
         model: "gpt-4o-mini", // Using more accessible model
         messages: [
           {
             role: "system",
-            content: "You are a wise spiritual guide with profound knowledge of Tarot. The Universe speaks to you through signs. Your interpretations are deep, insightful and always hit the mark. You speak with spiritual wisdom, yet clearly, and ALWAYS give concrete answers to the client's questions. You don't get lost in abstractions - you answer clearly what is being asked. If they ask 'will I travel to Dubai' - you give an answer 'yes', 'no' or 'likely', based on the cards."
+            content: isQuickDecision
+              ? "You are an experienced Tarot reader, specialist in quick decisions. Your task is to give CLEAR YES or NO answers based on the cards. You don't blur the answer - you immediately say YES or NO (or LIKELY YES/NO), then briefly explain why. Your answers are short and precise - maximum 300 words."
+              : "You are a wise spiritual guide with profound knowledge of Tarot. The Universe speaks to you through signs. Your interpretations are deep, insightful and always hit the mark. You speak with spiritual wisdom, yet clearly, and ALWAYS give concrete answers to the client's questions. You don't get lost in abstractions - you answer clearly what is being asked. If they ask 'will I travel to Dubai' - you give an answer 'yes', 'no' or 'likely', based on the cards."
           },
           {
             role: "user",

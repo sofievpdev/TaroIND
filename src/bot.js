@@ -113,6 +113,9 @@ Sacred Bundle (${spreadTypes.package5.price} ⭐) - Save 22⭐!
 
 ━━━━━━━━━━━━━━━
 
+⚖️ Quick Decision (${spreadTypes.quickDecision.price} ⭐)
+Yes or No? Clear answer for your choice
+
 🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)
 Instant answer from cosmic forces
 
@@ -134,6 +137,7 @@ Choose your path to enlightenment...`;
       welcomeText,
       Markup.inlineKeyboard([
         [Markup.button.callback(`🎁 Sacred Bundle (${spreadTypes.package5.price} ⭐)`, 'spread_package_5')],
+        [Markup.button.callback(`⚖️ Quick Decision (${spreadTypes.quickDecision.price} ⭐)`, 'spread_quick_decision')],
         [Markup.button.callback(`🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)`, 'spread_one_card')],
         [Markup.button.callback(`🔮 Destiny Path (${spreadTypes.threeCards.price} ⭐)`, 'spread_three_cards')],
         [Markup.button.callback(`💖 Heart's Truth (${spreadTypes.loveReading.price} ⭐)`, 'spread_love_reading')],
@@ -515,6 +519,7 @@ Many say: "The reading hit exactly right. Like someone saw into my soul."
 Save 22⭐! Get 5 readings
 Use for ANY spreads above - love, destiny, or anything!`,
           Markup.inlineKeyboard([
+            [Markup.button.callback(`⚖️ Quick Decision (${spreadTypes.quickDecision.price} ⭐)`, 'spread_quick_decision')],
             [Markup.button.callback(`🌟 Divine Guidance (${spreadTypes.oneCard.price} ⭐)`, 'spread_one_card')],
             [Markup.button.callback(`🔮 Destiny Path (${spreadTypes.threeCards.price} ⭐)`, 'spread_three_cards')],
             [Markup.button.callback(`💖 Heart's Truth (${spreadTypes.loveReading.price} ⭐)`, 'spread_love_reading')],
